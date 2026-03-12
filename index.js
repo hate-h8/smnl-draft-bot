@@ -37,7 +37,7 @@ client.on('messageCreate', async message => {
   if(message.author.bot) return;
 
   // START DRAFT
-  if(message.content.startsWith('!draftstart')){
+  if(message.content.startsWith('!startdraft')){
     draftOrder = message.mentions.users.map(user => user.id);
     draftActive = true;
     if(draftOrder.length === 0){
@@ -47,6 +47,7 @@ client.on('messageCreate', async message => {
     CURRENT_ROUND++; // start round 1
     const firstUser = `<@${getCurrentDrafter()}>`;
     message.channel.send(`Draft started! ${firstUser} is on the clock.`);
+    return;
   }
 
   // MAKE PICK
