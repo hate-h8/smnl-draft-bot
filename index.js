@@ -11,7 +11,7 @@ const client = new Client({
 let draftOrder = [];
 let currentPick = 0;
 let draftActive = false;
-const TOTAL_ROUNDS = 2; // will be 22
+const TOTAL_ROUNDS = 4; // will be 22
 let CURRENT_ROUND = 0;
 
 // Snake Draft Logic
@@ -28,12 +28,6 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async message => {
-
-  if(CURRENT_ROUND > TOTAL_ROUNDS) {
-    message.channel.send(`Draft complete!`);
-    return;
-  }
-
   if(message.author.bot) return;
 
   // START DRAFT
@@ -70,6 +64,11 @@ client.on('messageCreate', async message => {
     message.channel.send(`${player} drafted by <@${currentUser}>`);
     currentPick++;
     if(currentPick % draftOrder.length === 0) CURRENT_ROUND++; // Start next round
+    if(CURRENT_ROUND > TOTAL_ROUNDS) {
+      message.channel.send(`Draft complete!`);
+      draftActive = false;
+      return;
+   }
     const nextUser = `<@${getCurrentDrafter()}>`;
     message.channel.send(`${nextUser} is now on the clock.`);
   }
