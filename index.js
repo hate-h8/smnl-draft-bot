@@ -50,7 +50,7 @@ client.on('messageCreate', async message => {
     draft.startDraft();
     message.channel.send(`Draft started!`);
     timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
-      startNextPick(channel);
+      startNextPick(message.channel);
     });
   }
 
@@ -77,7 +77,7 @@ client.on('messageCreate', async message => {
 
     timer.stopTimer();
     message.channel.send(`${player} drafted by <@${currentDrafter}>`);
-    startNextPick(channel);
+    startNextPick(message.channel);
   }
 });
 
