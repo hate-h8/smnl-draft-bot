@@ -2,8 +2,8 @@
 let pickTimer = null;
 let warningTimer = null;
 
-const PICK_TIME = 7200000; // 2hrs in milliseconds
-const WARNING_TIME = 1800000 // 30mins in milliseconds
+const PICK_TIME = 9000; // 2hrs in milliseconds
+const WARNING_TIME = 6000 // 30mins in milliseconds
 
 /**
  * Starts the timers for current drafter
