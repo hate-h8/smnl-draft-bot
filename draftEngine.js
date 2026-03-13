@@ -3,7 +3,7 @@ let draftActive = false;
 let draftOrder = [];
 let currentPick = 0;
 let CURRENT_ROUND = 1;
-const TOTAL_ROUNDS = 2;
+const TOTAL_ROUNDS = 22;
 
 /**
  * Defines forwards draft order
