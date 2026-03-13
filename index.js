@@ -15,10 +15,10 @@ const client = new Client({
 // Helper Functions
 /**
  * Go to next pick
- * @param {any} channel - discord channel
+ * @param {any} message - message from channel
  * @returns 
  */
-function startNextPick(channel) {
+function startNextPick(message) {
   draft.advancePick();
   if(draft.draftFinished()) {
     draft.endDraft();
@@ -26,8 +26,8 @@ function startNextPick(channel) {
     return;
    }
   // Start next pick
-  timer.startTimer(channel, draft.getCurrentDrafter, () => {
-    startNextPick(channel);
+  timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
+    startNextPick(message);
   });
 }
 
@@ -50,7 +50,7 @@ client.on('messageCreate', async message => {
     draft.startDraft();
     message.channel.send(`Draft started!`);
     timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
-      startNextPick(message.channel);
+      startNextPick(message);
     });
   }
 
@@ -77,7 +77,7 @@ client.on('messageCreate', async message => {
 
     timer.stopTimer();
     message.channel.send(`${player} drafted by <@${currentDrafter}>`);
-    startNextPick(message.channel);
+    startNextPick(message);
   }
 });
 
