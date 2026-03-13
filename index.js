@@ -13,7 +13,12 @@ const client = new Client({
 });
 
 // Helper Functions
-function startNextPick() {
+/**
+ * Go to next pick
+ * @param {any} channel - discord channel
+ * @returns 
+ */
+function startNextPick(channel) {
   draft.advancePick();
   if(draft.draftFinished()) {
     draft.endDraft();
