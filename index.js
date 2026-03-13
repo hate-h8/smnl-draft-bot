@@ -26,7 +26,7 @@ function startNextPick(channel) {
     return;
    }
   // Start next pick
-  timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
+  timer.startTimer(channel, draft.getCurrentDrafter, () => {
     startNextPick();
   });
 }
