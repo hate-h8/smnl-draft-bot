@@ -12,6 +12,20 @@ const client = new Client({
   ]
 });
 
+// Helper Functions
+function startNextPick() {
+  draft.advancePick();
+  if(draft.draftFinished()) {
+    draft.endDraft();
+    message.channel.send(`Draft complete!`);
+    return;
+   }
+  // Start next pick
+  timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
+    startNextPick();
+  });
+}
+
 /**
  * Discord commands
  */
@@ -31,7 +45,7 @@ client.on('messageCreate', async message => {
     draft.startDraft();
     message.channel.send(`Draft started!`);
     timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
-      draft.advancePick();
+      startNextPick();
     });
   }
 
@@ -58,17 +72,7 @@ client.on('messageCreate', async message => {
 
     timer.stopTimer();
     message.channel.send(`${player} drafted by <@${currentDrafter}>`);
-    draft.advancePick();
-    if(draft.draftFinished()) {
-      draft.endDraft();
-      message.channel.send(`Draft complete!`);
-      return;
-   }
-
-    // Start next pick
-    timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
-      draft.advancePick();
-    });
+    startNextPick();
   }
 });
 
