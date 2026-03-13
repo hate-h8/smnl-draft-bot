@@ -38,7 +38,6 @@ client.on('messageCreate', async message => {
 
   // MAKE PICK
   if(message.content.startsWith('!draft')){
-    message.channel.send("hello");
     if(!draftActive) return; // going to include error messages later
 
     const player = message.content.split(' ').slice(1).join(' ');
@@ -52,15 +51,18 @@ client.on('messageCreate', async message => {
 
     // sheets logic goes here //
 
+    message.channel.send("hello")
     timer.stopTimer();
+    message.channel.send("hello")
     message.channel.send(`${player} drafted by <@${currentDrafter}>`);
-
+    message.channel.send("hello")
     draft.advancePick();
     if(draft.draftFinished()) {
       draftActive = false;
       message.channel.send(`Draft complete!`);
       return;
    }
+   message.channel.send("hello")
 
     // Start next pick
     const nextDrafter = draft.getCurrentDrafter();
