@@ -27,7 +27,7 @@ function startNextPick(channel) {
    }
   // Start next pick
   timer.startTimer(channel, draft.getCurrentDrafter, () => {
-    startNextPick();
+    startNextPick(channel);
   });
 }
 
@@ -50,7 +50,7 @@ client.on('messageCreate', async message => {
     draft.startDraft();
     message.channel.send(`Draft started!`);
     timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
-      startNextPick();
+      startNextPick(channel);
     });
   }
 
@@ -77,7 +77,7 @@ client.on('messageCreate', async message => {
 
     timer.stopTimer();
     message.channel.send(`${player} drafted by <@${currentDrafter}>`);
-    startNextPick();
+    startNextPick(channel);
   }
 });
 
