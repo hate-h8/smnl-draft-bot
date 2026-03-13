@@ -12,8 +12,6 @@ const client = new Client({
   ]
 });
 
-let draftActive = false; // is draft active?
-
 /**
  * Discord commands
  */
@@ -30,6 +28,7 @@ client.on('messageCreate', async message => {
     draft.setDraftOrder(order);
 
     // Start first pick
+    draft.startDraft();
     message.channel.send(`Draft started!`);
     timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
       draft.advancePick();
@@ -38,7 +37,7 @@ client.on('messageCreate', async message => {
 
   // MAKE PICK
   if(message.content.startsWith('!draft')){
-    if(!draftActive) {
+    if(!draft.isDraftActive()) {
       message.channel.send("Draft is inactive.");
       return;
     }
@@ -61,7 +60,7 @@ client.on('messageCreate', async message => {
     message.channel.send(`${player} drafted by <@${currentDrafter}>`);
     draft.advancePick();
     if(draft.draftFinished()) {
-      draftActive = false;
+      draft.endDraft();
       message.channel.send(`Draft complete!`);
       return;
    }

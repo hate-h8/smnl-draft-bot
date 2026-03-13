@@ -1,4 +1,5 @@
 // This class defines the draft logic
+let draftActive = false;
 let draftOrder = [];
 let currentPick = 0;
 let CURRENT_ROUND = 1;
@@ -31,15 +32,39 @@ function advancePick() {
 }
 
 /**
- * @returns - if draft is finished
+ * @returns - is draft is finished
  */
 function draftFinished() {
     return CURRENT_ROUND > TOTAL_ROUNDS;
+}
+
+/**
+ * @returns - draft active status
+ */
+function isDraftActive() {
+    return draftActive;
+}
+
+/**
+ * sets draft active status to true
+ */
+function startDraft() {
+    draftActive = true;
+}
+
+/**
+ * sets draft active status to false
+ */
+function endDraft() {
+    draftActive = false;
 }
 
 module.exports = {
     setDraftOrder,
     getCurrentDrafter,
     advancePick,
-    draftFinished
+    draftFinished,
+    isDraftActive,
+    startDraft,
+    endDraft
 };
