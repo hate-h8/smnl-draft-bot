@@ -1,4 +1,8 @@
+// Class defines what discord commands will exist and how to respond to them
 const { Client, GatewayIntentBits } = require('discord.js');
+const draft = require("./draftEngine");
+const timer = require("./timer");
+const sheets = require("./sheets");
 
 const client = new Client({
   intents: [
@@ -8,69 +12,62 @@ const client = new Client({
   ]
 });
 
-let draftOrder = [];
-let currentPick = 0;
-let draftActive = false;
-const TOTAL_ROUNDS = 4; // will be 22
-let CURRENT_ROUND = 0;
+let draftActive = false; // is draft active?
 
-// Snake Draft Logic
-function getCurrentDrafter() { 
-  const index = currentPick % draftOrder.length;
-  if (CURRENT_ROUND % 2 === 1) return draftOrder[index]; // normal order
-  else return draftOrder[draftOrder.length - 1 - index]; // reverse order
-}
-
-
-
-client.once('ready', () => {
-  console.log('Draft Bot Online');
-});
-
+/**
+ * Discord commands
+ */
 client.on('messageCreate', async message => {
-  if(message.author.bot) return;
+  if(message.author.bot) return; // ignore self
 
   // START DRAFT
-  if(message.content.startsWith('!startdraft')){
-    draftOrder = message.mentions.users.map(user => user.id);
-    draftActive = true;
-    if(draftOrder.length === 0){
+  if(message.content.startsWith('!startdraft')) {
+    const order = message.mentions.users.map(user => user.id);
+    if(order.length === 0){
       message.reply("You must mention the draft order.");
       return;
     }
-    CURRENT_ROUND++; // start round 1
-    const firstUser = `<@${getCurrentDrafter()}>`;
-    message.channel.send(`Draft started! ${firstUser} is on the clock.`);
-    return;
+    draft.setDraftOrder(order);
+
+    // Start first pick
+    const first = draft.getCurrentDrafter();
+    message.channel.send(`Draft started! ${first} is on the clock.`);
+    timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
+      draft.advancePick();
+    });
   }
 
   // MAKE PICK
   if(message.content.startsWith('!draft')){
-    if(!draftActive){
-      message.reply("Draft is not active.");
-      return;
-    }
-    const player = message.content.split(' ').slice(1).join(' ');
-    if(!player){
-      message.reply("Please include a player name.");
-      return;
-    }
+    if(!draftActive) return; // going to include error messages later
 
-    const currentUser = getCurrentDrafter();
-    if(message.author.id !== currentUser){
+    const player = message.content.split(' ').slice(1).join(' ');
+    if(!player) return; // going to include error messages later
+
+    const currentDrafter = draft.getCurrentDrafter();
+    if(message.author.id !== currentDrafter){
       message.reply("It is not your turn.");
       return;
     }
-    message.channel.send(`${player} drafted by <@${currentUser}>`);
-    currentPick++;
-    if(currentPick % draftOrder.length === 0) CURRENT_ROUND++; // Start next round
-    if(CURRENT_ROUND > TOTAL_ROUNDS) {
-      message.channel.send(`Draft complete!`);
+
+    // sheets logic goes here //
+
+    timer.stopTimer();
+    message.channel.send(`${player} drafted by <@${currentDrafter}>`);
+
+    draft.advancePick();
+    if(draft.draftFinished()) {
       draftActive = false;
+      message.channel.send(`Draft complete!`);
       return;
    }
-    const nextUser = `<@${getCurrentDrafter()}>`;
-    message.channel.send(`${nextUser} is now on the clock.`);
+
+    // Start next pick
+    const nextDrafter = draft.getCurrentDrafter();
+    message.channel.send(`${nextDrafter} is now on the clock.`);
+    timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
+      draft.advancePick();
+    });
   }
 });
 
