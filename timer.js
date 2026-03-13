@@ -2,8 +2,8 @@
 let pickTimer = null;
 let warningTimer = null;
 
-const PICK_TIME = 7200000; // 2hrs in milliseconds
-const WARNING_TIME = 1800000 // 30mins in milliseconds
+const PICK_TIME = 90000; // 2hrs in milliseconds
+const WARNING_TIME = 60000 // 30mins in milliseconds
 
 /**
  * Starts the timers for current drafter
@@ -15,7 +15,7 @@ function startTimer(channel, getCurrentDrafter, onExpire) {
     stopTimer();
     const currentDrafter = getCurrentDrafter();
     // start turn
-    channel.send(`<@${currentDrafter}> is on the clock ${PICK_TIME/60000} mins`);
+    channel.send(`<@${currentDrafter}> is on the clock (${PICK_TIME/60000} mins remaining)`);
 
     // warning
     warningTimer = setTimeout(() => {

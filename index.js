@@ -66,8 +66,6 @@ client.on('messageCreate', async message => {
    }
 
     // Start next pick
-    const nextDrafter = draft.getCurrentDrafter();
-    message.channel.send(`${nextDrafter} is now on the clock.`);
     timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
       draft.advancePick();
     });
