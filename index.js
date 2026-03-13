@@ -30,8 +30,7 @@ client.on('messageCreate', async message => {
     draft.setDraftOrder(order);
 
     // Start first pick
-    const first = draft.getCurrentDrafter();
-    message.channel.send(`Draft started! ${first} is on the clock.`);
+    message.channel.send(`Draft started!`);
     timer.startTimer(message.channel, draft.getCurrentDrafter, () => {
       draft.advancePick();
     });
@@ -39,6 +38,7 @@ client.on('messageCreate', async message => {
 
   // MAKE PICK
   if(message.content.startsWith('!draft')){
+    message.channel.send("hello");
     if(!draftActive) return; // going to include error messages later
 
     const player = message.content.split(' ').slice(1).join(' ');
